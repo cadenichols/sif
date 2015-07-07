@@ -10,7 +10,6 @@ var gulp =        require('gulp'),
     sourcemaps =  require('gulp-sourcemaps'),
     concat =      require('gulp-concat'),
     copy =        require('gulp-copy'),
-    jade =        require('gulp-jade'),
     bower =       require('gulp-bower'),
     watch =       require('gulp-watch'),
     browser =     require('browser-sync'),
@@ -20,8 +19,7 @@ var gulp =        require('gulp'),
 
     paths = {
       filesrc: ['./source/**/*.*'],
-      jadesrc: ['./source/**/*.jade'],
-      htmlsrc: ['./public/**/*.html'],
+      htmlsrc: ['./source/**/*.html'],
       sasssrc: ['./source/**/*.scss'],
       codesrc: ['./source/**/*.js'],
       mediasrc: ['./source/media/**/*', './source/favicon.ico'],
@@ -36,7 +34,7 @@ gulp.task('default', function(cb){
   run('build', 'serve', 'watch', cb);
 });
 gulp.task('build', ['clean:public', 'clean:temp'], function(cb){
-  run('bower', 'jade', 'build-js', 'build-css', 'copy', cb);
+  run('bower', 'html', 'build-js', 'build-css', 'copy', cb);
 });
 //refresh tasks
 gulp.task('refresh', function(cb){
@@ -82,11 +80,9 @@ gulp.task('jshint', function(){
   .pipe(jshint())
   .pipe(jshint.reporter('jshint-stylish'));
 });
-gulp.task('jade', function(){
-  return gulp.src(paths.jadesrc)
-  .pipe(plumber())
-  .pipe(jade({pretty: true, doctype: 'html', locals: {isProd: isProd}}))
-  .pipe(gulp.dest(paths.destination))
+gulp.task('html', function(){
+  return gulp.src(paths.htmlsrc)
+  .pipe(copy(paths.destination, {prefix: 1}))
   .on('error', gutil.log);
 });
 gulp.task('build-css', function(){
